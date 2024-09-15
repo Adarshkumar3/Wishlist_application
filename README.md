@@ -22,7 +22,7 @@
 
 ## 🖼️ Screenshot Showcase
 
-![Wish Wonderland in Action](https://via.placeholder.com/800x400.png?text=Wish+Wonderland+Demo)
+![Wish Wonderland in Action](https://github.com/Adarshkumar3/Wishlist_application/blob/main/Web%20capture_15-9-2024_11313_.jpeg)
 
 ## 🚀 Quick Start Guide
 
