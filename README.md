@@ -1,12 +1,11 @@
 # Wishlist_application
 # 🌟 Wish Wonderland: A Stunning Collaborative WishList App 🌟
 
-![Wish Wonderland Banner](https://via.placeholder.com/1200x300.png?text=Wish+Wonderland)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/wish-wonderland.svg)](https://github.com/yourusername/wish-wonderland/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/wish-wonderland.svg)](https://github.com/yourusername/wish-wonderland/network)
-[![GitHub issues](https://img.shields.io/github/issues/yourusername/wish-wonderland.svg)](https://github.com/yourusername/wish-wonderland/issues)
+[![GitHub stars](https://github.com/Adarshkumar3?tab=repositories)
+[![GitHub forks](https://img.shields.io/github/forks/yourusername/wish-wonderland.svg)](https://github.com/Adarshkumar3/wish-wonderland/network)
+[![GitHub issues](https://img.shields.io/github/issues/Adarshkumar3/wish-wonderland.svg)](https://github.com/Adarshkumar3/wish-wonderland/issues)
 
 > 🚀 Elevate your wishlist experience with Wish Wonderland - where dreams meet design! 🎨✨
 
