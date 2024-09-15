@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stunning Collaborative WishList App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #3498db;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(91, 194, 247, 0.2) 0%, rgba(91, 194, 247, 0) 40%),
+                radial-gradient(circle at 90% 80%, rgba(162, 155, 254, 0.2) 0%, rgba(162, 155, 254, 0) 40%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before,
+        .container::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .container::before {
+            background: var(--gradient-1);
+            top: -100px;
+            left: -100px;
+        }
+
+        .container::after {
+            background: var(--gradient-2);
+            bottom: -100px;
+            right: -100px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 3rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 5px;
+            background: var(--gradient-1);
+            margin: 10px auto;
+            border-radius: 5px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        input[type="text"], input[type="number"] {
+            flex-grow: 1;
+            padding: 1rem;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            transition: all var(--transition-speed) ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            background-image: var(--gradient-1);
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px var(--shadow-color);
+        }
+
+        #addItem {
+            border-radius: 0 10px 10px 0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-buttons button {
+            margin: 0 0.5rem;
+            border-radius: 25px;
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .filter-buttons button.active {
+            background-image: var(--gradient-1);
+            color: white;
+            border: none;
+        }
+
+        #wishList {
+            list-style-type: none;
+        }
+
+        .wishlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px var(--shadow-color);
+            transition: all var(--transition-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wishlist-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-image: var(--gradient-2);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .wishlist-item:hover::before {
+            width: 10px;
+        }
+
+        .wishlist-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px var(--shadow-color);
+        }
+
+        .wishlist-item.purchased {
+            opacity: 0.7;
+            text-decoration: line-through;
+            background-color: #f8f9fa;
+        }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .item-price {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .item-buttons button {
+            margin-left: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .purchase-btn {
+            background-image: var(--gradient-2);
+        }
+
+        .remove-btn {
+            background-image: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        }
+
+        #totalPrice {
+            text-align: right;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            color: var(--primary-color);
+            text-shadow: 1px 1px 2px var(--shadow-color);
+        }
+
+        #onlineUsers {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .wishlist-item {
+            animation: fadeIn 0.5s ease, floatAnimation 5s ease-in-out infinite;
+        }
+
+        #notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-image: var(--gradient-1);
+            color: white;
+            border-radius: 50px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        /* CSS Art: Gift Box */
+        .gift-box {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .gift-box::before,
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            background: var(--primary-color);
+        }
+
+        .gift-box::before {
+            width: 100%;
+            height: 80%;
+            bottom: 0;
+            border-radius: 5px;
+        }
+
+        .gift-box::after {
+            width: 60%;
+            height: 100%;
+            left: 20%;
+            border-radius: 5px;
+        }
+
+        .gift-lid {
+            position: absolute;
+            width: 70%;
+            height: 30%;
+            background: var(--secondary-color);
+            top: -10%;
+            left: 15%;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .gift-ribbon {
+            position: absolute;
+            width: 20%;
+            height: 50%;
+            background: var(--secondary-color);
+            top: 25%;
+            left: 40%;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            input[type="text"], input[type="number"], #addItem {
+                border-radius: 10px;
+                margin-bottom: 0.5rem;
+            }
+
+            .wishlist-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-buttons {
+                margin-top: 1rem;
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .item-buttons button {
+                margin: 0;
+                flex-grow: 1;
+            }
+
+            .gift-box {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gift-box">
+            <div class="gift-lid"></div>
+            <div class="gift-ribbon"></div>
+        </div>
+        <h1>Wish Wonderland</h1>
+        <div id="onlineUsers">Online Users: 1</div>
+        <div class="input-group">
+            <input type="text" id="itemInput" placeholder="What's your wish?">
+            <input type="number" id="priceInput" placeholder="Price" min="0" step="0.01">
+            <button id="addItem">Add to Wishlist</button>
+        </div>
+        <div class="filter-buttons">
+            <button id="showAll" class="active">All Wishes</button>
+            <button id="showActive">Unfulfilled</button>
+            <button id="showPurchased">Fulfilled</button>
+        </div>
+        <ul id="wishList"></ul>
+        <div id="totalPrice">Total: $0.00</div>
+    </div>
+    <div id="notification"></div>
+
+    <script>
+        // The JavaScript code remains the same as in the previous version
+        class WishList {
+            constructor() {
+                this.items = JSON.parse(localStorage.getItem('wishlist')) || [];
+                this.filter = 'all';
+                this.onlineUsers = 1;
+
+                this.itemInput = document.getElementById('itemInput');
+                this.priceInput = document.getElementById('priceInput');
+                this.addItemBtn = document.getElementById('addItem');
+                this.wishList = document.getElementById('wishList');
+                this.showAllBtn = document.getElementById('showAll');
+                this.showActiveBtn = document.getElementById('showActive');
+                this.showPurchasedBtn = document.getElementById('showPurchased');
+                this.totalPriceElement = document.getElementById('totalPrice');
+                this.onlineUsersElement = document.getElementById('onlineUsers');
+                this.notificationElement = document.getElementById('notification');
+
+                this.addItemBtn.addEventListener('click', () => this.addItem());
+                this.itemInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.addItem();
+                });
+                this.showAllBtn.addEventListener('click', () => this.filterItems('all'));
+                this.showActiveBtn.addEventListener('click', () => this.filterItems('active'));
+                this.showPurchasedBtn.addEventListener('click', () => this.filterItems('purchased'));
+
+                // Initialize Socket.io
+                this.socket = io('https://your-server-url.com');  // Replace with your actual server URL
+                this.setupSocketListeners();
+
+                this.renderList();
+            }
+
+            setupSocketListeners() {
+                this.socket.on('updateList', (updatedList) => {
+                    this.items = updatedList;
+                    this.renderList();
+                    this.showNotification('Wishlist updated by another user');
+                });
+
+                this.socket.on('updateOnlineUsers', (count) => {
+                    this.onlineUsers = count;
+                    this.onlineUsersElement.textContent = `Online Users: ${this.onlineUsers}`;
+                });
+            }
+
+            addItem() {
+                const itemText = this.itemInput.value.trim();
+                const itemPrice = parseFloat(this.priceInput.value) || 0;
+                if (itemText) {
+                    const newItem = {
+                        id: Date.now(),
+                        text: itemText,
+                        price: itemPrice,
+                        purchased: false
+                    };
+                    this.items.push(newItem);
+                    this.saveToLocalStorage();
+                    this.socket.emit('addItem', newItem);
+                    this.renderList();
+                    this.itemInput
