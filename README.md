@@ -35,7 +35,7 @@
 
 1. Clone the repo:
    ```sh
-   git clone https://github.com/yourusername/wish-wonderland.git
+   git clone https://adarshkumar3.github.io/Wishlist_application/
    ```
 
 2. Navigate to the project directory:
@@ -86,10 +86,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+Your Name - Adarsh kumar - ako522001@gmail.com
 
-Project Link: [https://github.com/yourusername/wish-wonderland](https://github.com/yourusername/wish-wonderland)
-
+Project Link: https://adarshkumar3.github.io/Wishlist_application/
 ## 🙏 Acknowledgements
 
 - [Font Awesome](https://fontawesome.com) - For the amazing icons
