@@ -2,11 +2,6 @@
 # 🌟 Wish Wonderland: A Stunning Collaborative WishList App 🌟
 
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://github.com/Adarshkumar3?tab=repositories)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/wish-wonderland.svg)](https://github.com/Adarshkumar3/wish-wonderland/network)
-[![GitHub issues](https://img.shields.io/github/issues/Adarshkumar3/wish-wonderland.svg)](https://github.com/Adarshkumar3/wish-wonderland/issues)
-
 > 🚀 Elevate your wishlist experience with Wish Wonderland - where dreams meet design! 🎨✨
 
 ## 🌈 Features That Make Us Shine
